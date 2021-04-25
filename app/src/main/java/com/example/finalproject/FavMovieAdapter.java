@@ -27,17 +27,20 @@ public class FavMovieAdapter extends ArrayAdapter<Movie> {
 
         RecyclerView.ViewHolder holder;
 
+        // Inflate item view with movie information
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_fav, null);
         }
 
+        // Movie title and year shown as list item
         TextView txtTitle = (TextView) convertView.findViewById(R.id.txtViewMovieTitle);
         txtTitle.setText(mov.getTitle() + " - " + mov.getYear());
 
         return convertView;
     }
 
+    // Update movies list handled by adapter to fill the llist in view
     public void updateData(ArrayList<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();

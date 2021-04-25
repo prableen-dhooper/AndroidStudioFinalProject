@@ -29,6 +29,7 @@ public class SearchActivity extends AppCompatActivity {
         init();
     }
 
+    // Get search term and performs search
     private void init() {
         String term = getIntent().getStringExtra("SearchTerm");
         movieAPI(term);
@@ -70,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    // Send request to omdbapi
     private void movieAPI(String term) {
         String targetURL = "https://www.omdbapi.com/?i=tt3896198&apikey=debcf89e&t=" + term;
 
@@ -81,6 +83,7 @@ public class SearchActivity extends AppCompatActivity {
                 .addQueryParameter("t", term)
                 .build();
 
+        // I used retrofit to get data from omdb
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -88,7 +91,10 @@ public class SearchActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
+        // Prepare retrofit call to omdb
         Call<Movie> call = retrofitAPI.getMovie(targetURL);
+
+        // Call and handle response
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, retrofit2.Response<Movie> response) {
@@ -96,6 +102,7 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d("RETROFIT", "onResponse: " + response.body());
                 final Movie mv = response.body();
 
+                // On successfull response, fill the information to view
                 TextView tvSearchTitle = findViewById(R.id.txtviewSearchMovieTitle);
                 TextView tvSearchYear = findViewById(R.id.txtviewSearchMovieYear);
                 TextView tvSearchPlot = findViewById(R.id.txtviewSearchMoviePlot);
@@ -119,6 +126,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
 
+                // Get image from the image url
                 try {
                     new DownloadImageTask(imgSearchImage).execute(mv.getPosterURL());
                 } catch (Exception e) {
@@ -127,6 +135,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
 
+            // Failed to get data
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 Log.d("RETROFIT", "onError: " + t.getMessage());
